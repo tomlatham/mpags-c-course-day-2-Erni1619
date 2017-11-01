@@ -1,4 +1,5 @@
 #include "TransformChar.hpp"
+#include <cctype>
 
 std::string transformChar(const char in_char){
 

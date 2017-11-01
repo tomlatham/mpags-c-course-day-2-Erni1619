@@ -1,4 +1,5 @@
-#include "ProcessComandLine.hpp"
+#include "ProcessCommandLine.hpp"
+#include <iostream>
 
 bool processCommandLine(const std::vector<std::string>& args,
                 bool& helpRequested,   
@@ -7,7 +8,7 @@ bool processCommandLine(const std::vector<std::string>& args,
                 std::string& outputFile,
                 bool& iscipher,
                 bool& isdecipher,
-                int& key){
+                size_t& key){
     //processes the arguments given
     typedef std::vector<std::string>::size_type size_type;
     const size_type nCmdLineArgs {args.size()};
@@ -68,7 +69,8 @@ bool processCommandLine(const std::vector<std::string>& args,
       
     else {
         iscipher=true;
-        key=atoi(args[i+1].c_str());
+	// TEL - could do some rudimentary checks that the string represents a positive integer, e.g. each character is a digit
+        key=std::stoul(args[i+1]);
         ++i;
     }
     }
@@ -85,7 +87,8 @@ bool processCommandLine(const std::vector<std::string>& args,
       
     else {
         isdecipher=true;
-        key=atoi(args[i+1].c_str());
+	// TEL - could do some rudimentary checks that the string represents a positive integer, e.g. each character is a digit
+        key=std::stoul(args[i+1]);
         ++i;
     }
     }
@@ -98,37 +101,6 @@ bool processCommandLine(const std::vector<std::string>& args,
     }
   }
 
-  // Handle help, if requested
-  if (helpRequested) {
-    // Line splitting for readability
-    std::cout
-      << "Usage: mpags-cipher [-i <file>] [-o <file>]\n\n"
-      << "Encrypts/Decrypts input alphanumeric text using classical ciphers\n\n"
-      << "Available options:\n\n"
-      << "  -h|--help         Print this help message and exit\n\n"
-      << "  --version         Print version information\n\n"
-      << "  -i FILE           Read text to be processed from FILE\n"
-      << "                    Stdin will be used if not supplied\n\n"
-      << "  -o FILE           Write processed text to FILE\n"
-      << "                    Stdout will be used if not supplied\n\n"
-      << "  -c|--cipher KEY   cipher a string using the caesar algorithm using the given KEY\n"
-      << "  -d|--decipher KEY decipher a string using the caesar algorithm using the given KEy\n";
-    // Help requires no further action, so return from main
-    // with 0 used to indicate success
-    return false;
-  }
-
-  // Handle version, if requested
-  // Like help, requires no further action,
-  // so return from main with zero to indicate success
-  if (versionRequested) {
-    std::cout << "0.1.0" << std::endl;
-    return false;
-  }
-  if (iscipher && isdecipher){
-    std::cout << "cannot select both cipher and decipher options!" <<std::endl;
-    return false;   
-}
   return true;
 }
 
